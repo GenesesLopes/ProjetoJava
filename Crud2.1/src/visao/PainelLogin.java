@@ -15,12 +15,12 @@ public class PainelLogin extends JFrame {
 	
 	public PainelLogin() {
 		super();
-		this.setLayout(null);
+		getContentPane().setLayout(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 		this.setTitle("Tela de Login");
 		this.setBounds(80, 80, 400, 400);
-		
+				
 		
 		labelLogin = new JLabel("Login: ");
 		labelLogin.setBounds(64, 87, 70, 15);
@@ -30,9 +30,9 @@ public class PainelLogin extends JFrame {
 		labelSenha.setBounds(64, 141, 70, 15);
 		getContentPane().add(labelSenha);
 		
-		this.add(getBotaoLogar());
-		this.add(getLogin());
-		this.add(getSenha());
+		getContentPane().add(getBotaoLogar());
+		getContentPane().add(getLogin());
+		getContentPane().add(getSenha());
 		
 		
 	}
@@ -59,7 +59,7 @@ public class PainelLogin extends JFrame {
 	public JButton getBotaoLogar() {
 		if(botaoLogar == null) {
 			botaoLogar = new JButton("Logar");
-			botaoLogar.setBounds(107, 195, 117, 25);
+			botaoLogar.setBounds(128, 194, 117, 25);
 		}
 		return botaoLogar;
 	}

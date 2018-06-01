@@ -24,13 +24,12 @@ public class ControladorLogin implements ActionListener {
 	
 	
 	public ControladorLogin(PainelLogin painelLogin){
-		super();
 		if(painelLogin == null) {
 			painelLogar = new PainelLogin();
 		}else {
 			this.painelLogar = painelLogin;
 		}
-		
+		usuario = new DaoUsuario();
 		painelLogar.repaint();
 		painelLogar.validate();
 		addEventos();
@@ -50,8 +49,6 @@ public class ControladorLogin implements ActionListener {
 		if(e.getSource() == painelLogar.getBotaoLogar()) {
 			
 			//verificando usuario e senha no banco
-			usuario = new DaoUsuario();
-			
 			if(usuario.comparaUsuario(painelLogar.getLogin().getText(), painelLogar.getSenha().getText())) {
 				//Passando dados para Model
 				Usuario usuarioDados = new Usuario();
@@ -59,7 +56,7 @@ public class ControladorLogin implements ActionListener {
 				usuarioDados.setSenha(painelLogar.getSenha().getText());
 				//renderizando para painel Central
 				painelCentral = new PainelCentral();
-				controladorPainel = new ControladorPainel(painelCentral);
+				controladorPainel = new ControladorPainel(painelCentral,usuarioDados);
 				/* Não funciona desse jeito
 				painelLogar.setContentPane(painelCentral);
 				painelLogar.repaint();

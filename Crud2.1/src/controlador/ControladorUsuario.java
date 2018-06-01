@@ -34,10 +34,13 @@ public class ControladorUsuario implements ActionListener {
 				painelCadastraUsuario.getSenha1().setText(null);
 				painelCadastraUsuario.getSenha2().setText(null);
 				
-			}else {
+			}else if(painelCadastraUsuario.getTextoNomeUsuario().getText().isEmpty() || painelCadastraUsuario.getSenha1().getText().isEmpty()) {
+				JOptionPane.showMessageDialog(painelCadastraUsuario, "Existem capos vazios");
+			}
+			
+			else {
 				banco = new DaoUsuario();
 				banco.inserirUsuario(painelCadastraUsuario.getTextoNomeUsuario().getText(), painelCadastraUsuario.getSenha1().getText());
-				JOptionPane.showMessageDialog(painelCadastraUsuario, "Usuário inserido com Sucesso");
 				painelCadastraUsuario.getTextoNomeUsuario().setText(null);
 				painelCadastraUsuario.getSenha1().setText(null);
 				painelCadastraUsuario.getSenha2().setText(null);

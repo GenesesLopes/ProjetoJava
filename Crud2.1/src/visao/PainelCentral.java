@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class PainelCentral extends JFrame {
 	private JMenuBar menuBar;
@@ -13,6 +15,7 @@ public class PainelCentral extends JFrame {
 	private JMenuItem botaoArquivoBaixar;
 	private JMenu menuOpcoes;
 	private JMenuItem botaoMenuSair;
+	private JMenuItem botaoArquivoEnviar;
 	
 	//metodos 
 	public JMenuItem getBotaoUsuarioCadastrar() {
@@ -36,6 +39,15 @@ public class PainelCentral extends JFrame {
 		}
 		return botaoMenuSair;
 	}
+	
+
+	public JMenuItem getBotaoArquivoEnviar() {
+		if(botaoArquivoEnviar == null) {
+			botaoArquivoEnviar = new JMenuItem("Enviar");
+		}
+		return botaoArquivoEnviar;
+	}
+	
 
 	public PainelCentral() {
 		setTitle("Painel");
@@ -58,6 +70,8 @@ public class PainelCentral extends JFrame {
 		
 		menuUsuario.add(getBotaoUsuarioCadastrar());
 		menuArquivo.add(getBotaoArquivoBaixar());
+		
+		menuArquivo.add(getBotaoArquivoEnviar());
 		menuOpcoes.add(getBotaoMenuSair());
 	}
 }

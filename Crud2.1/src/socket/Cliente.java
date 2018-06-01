@@ -1,39 +1,26 @@
 package socket;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
+
+import javax.swing.JOptionPane;
+
 
 public class Cliente {
-	/*Socket cliente;
+	Socket cliente;
 	private int requisicao;
 	InputStream conexao;
-	ObjectOutputStream saida;
+	ObjectOutputStream objeto;
+	FileInputStream file;
 	private String [] arquivos = null;
+	private String nomeDoArquivo;
 	
-	//Construtor
-	public Cliente(int requisicao) {
-		
-		this.requisicao = requisicao;
-		
-		if(requisicao == 1) {
-			listarArquivosCliente();
-		}else if(requisicao == 2) {
-			baixarArquivosCliente();
-		}
-		
-	}
 	
 
 	//metodos gets e sets
@@ -45,27 +32,83 @@ public class Cliente {
 		this.arquivos = arquivos;
 	}
 	
-	public void baixarArquivosCliente() {
+	//Método para enviar arquivos ao servidor
+	public void enviaArquivo(File arquivoCliente) {
 		try {
-			String teste = null;
-			cliente = new Socket("localhost",2474);
-			OutputStream out = cliente.getOutputStream();
-			InputStream in = cliente.getInputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(out);
-			InputStreamReader isw = new InputStreamReader(in);
-			BufferedWriter writer = new BufferedWriter(osw);
-			BufferedReader reader = new BufferedReader(isw);
-			writer.write("Enviando esse texto do cliente");
-			writer.flush();
-			if(reader.ready())
-				teste = reader.readLine();
-			System.out.println(teste);
-			reader.close();
-			writer.close();
+			//Estabelecendo conexão com o servidor
+			cliente = new Socket("localhost",2476);
+			objeto = new ObjectOutputStream(cliente.getOutputStream());
+			//enviando informações do aqruivo
+			objeto.writeUTF(arquivoCliente.getName());
+			objeto.writeLong(arquivoCliente.length());
+			//enviando o arquivo
+			file = new FileInputStream(arquivoCliente.getAbsoluteFile());
+			byte[] buffer = new byte[(int)arquivoCliente.length()];
+			int lido;
+			while(true) {
+				lido = file.read(buffer, 0, (int)arquivoCliente.length());
+				if(lido == -1)
+					break;
+				objeto.write(buffer, 0, lido);
+			}
+			objeto.flush();
+			//fechando conexão
+			objeto.close();
+			file.close();
+			cliente.close();
+			JOptionPane.showMessageDialog(null, "Arquivo Enviado com sucesso...");
+			
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Problema ao enviar arquivo para o servidor");
+			e.printStackTrace();
+		}
+	}
+	
+	//Método para selecionar arquivo
+	public void selecionaArquivo(String nomeDoArquivo) {
+		try {
+			//estabelecendo conexão com o servidor
+			cliente = new Socket("localhost",2475);
+			ObjectOutputStream out = new ObjectOutputStream(cliente.getOutputStream());
+			//enviando nome do arquivo
+			out.writeUTF(nomeDoArquivo);
+			out.flush();
+			//fechando conexão
+			out.close();
 			cliente.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//Metodo para baixar os arquivos do servidor
+	public void baixarArquivosCliente() {
+		try {
+			//estabelecendo conexão com o servidor
+			cliente = new Socket("localhost",2474);
+			ObjectInputStream in = new ObjectInputStream(cliente.getInputStream());
+			//recuperando nome do arquivo 
+			FileOutputStream file = new FileOutputStream("baixados/"+in.readUTF());
+			//recuperando tamanho do arquivo
+			int tamanho = (int)in.readLong();
+			
+			//recebendo o arquivo
+			byte[] buffe = new byte[tamanho];
+			while(true) {
+				int lido = in.read(buffe,0,tamanho);
+				if(lido == -1)
+					break;
+				file.write(buffe, 0, lido);
+			}
+			//fechando conexão
+			in.close();
+			file.close();
+			cliente.close();
+			JOptionPane.showMessageDialog(null, "Arquivo baixado com sucesso...");
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Problema ao baixar o arquivo");
 			e.printStackTrace();
 		}
 		
@@ -82,63 +125,16 @@ public class Cliente {
 			
 			//Recebendo a lista de arquivos do servidor
 			setArquivos(objeto.readUTF().split(","));
-			/*for (int i = 0; i < getArquivos().length; i++) {
-				System.out.println(getArquivos()[i]);
-				antigo ate aqui
-			}
-			
+						
 			//fechando conexões
 			objeto.close();
 			conexao.close();
 			cliente.close();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null, "Problema na comunicação com o servidor");
 			e.printStackTrace();
 		}
-		
-		
-	}*/
-	
-	public static void main(String[] args) {
-		try {
-			final Socket cliente = new Socket("localhost",2473);
-			//lendo mensagens do servidor
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						BufferedReader leitor = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-						
-						
-						while(true) {
-							String mensagem = leitor.readLine();
-							System.out.println("O servidor disse: "+mensagem);
-						}
-						
-					}  
-					catch (IOException e) {
-						System.out.println("impossivel ler a mensagem do servidor");
-						e.printStackTrace();
-					}
-				}
-			}.start();
-			//escrevendo para o servidor
-			PrintWriter escreveServidor = new PrintWriter(cliente.getOutputStream());
-			BufferedReader leitorTerminal = new BufferedReader(new InputStreamReader(System.in));
-			while(true) {
-				String mensagemTerminal = leitorTerminal.readLine();
-				escreveServidor.println(mensagemTerminal);
-			}
-			
-		} catch (UnknownHostException e) {
-			System.out.println("Endereço inválido");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("Servidor Fora do ar");
-			e.printStackTrace();
-		}
-		
 	}
 
 }

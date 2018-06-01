@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 public class DaoUsuario {
 	
 	private String consulta;
@@ -24,9 +26,13 @@ public class DaoUsuario {
 			//Executando a consulta no banco
 			prepare.executeUpdate();
 			prepare.close();
+			JOptionPane.showMessageDialog(null, "Usuário inserido com sucesso...");
 			Conexao.getConexao().close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		}catch(MySQLIntegrityConstraintViolationException e) {
+			JOptionPane.showMessageDialog(null, "Usuaŕio já existente");
+		}
+		catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "problema na inserção");
 			e.printStackTrace();
 		}
 	}
