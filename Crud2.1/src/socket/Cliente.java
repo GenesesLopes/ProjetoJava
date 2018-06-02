@@ -20,9 +20,19 @@ public class Cliente {
 	FileInputStream file;
 	private String [] arquivos = null;
 	private String nomeDoArquivo;
+	private File nomePastas;
+	private String caminho = null;
 	
 	
-
+	public Cliente() {
+		if(nomePastas==null)
+			nomePastas = new File("baixados");
+		
+		if(!nomePastas.exists()) 
+			nomePastas.mkdir();
+					
+	}
+	
 	//metodos gets e sets
 	public String[] getArquivos() {
 		return arquivos;

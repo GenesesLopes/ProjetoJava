@@ -15,7 +15,7 @@ public class ProcessoBaixaArquivos implements Runnable {
 	File arquivo;
 	ObjectOutputStream out;
 	FileInputStream file;
-	public static String nomeDoArquivo = null;
+	public static String nomeDoArquivo = "teste.txt";
 	
 	//Construtor
 	public ProcessoBaixaArquivos(ServerSocket servidor) {
@@ -52,7 +52,13 @@ public class ProcessoBaixaArquivos implements Runnable {
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			try {
+				sv.close();
+				System.err.println("Conexão fechada na porta 2474");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 	}
