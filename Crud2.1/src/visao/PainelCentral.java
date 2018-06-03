@@ -54,6 +54,7 @@ public class PainelCentral extends JFrame {
 		getContentPane().setLayout(null);
 		this.setBounds(80, 80, 400, 400);
 		this.setVisible(true);
+		this.setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		menuBar = new JMenuBar();

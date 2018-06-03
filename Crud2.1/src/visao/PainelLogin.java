@@ -20,6 +20,7 @@ public class PainelLogin extends JFrame {
 		this.setVisible(true);
 		this.setTitle("Tela de Login");
 		this.setBounds(80, 80, 400, 400);
+		this.setResizable(false);
 				
 		
 		labelLogin = new JLabel("Login: ");
